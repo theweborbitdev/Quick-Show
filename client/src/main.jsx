@@ -6,14 +6,16 @@ import { BrowserRouter } from 'react-router-dom'
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
-if (!clerkPublishableKey) {
-  throw new Error('Missing VITE_CLERK_PUBLISHABLE_KEY in .env.local')
-}
+const app = (
+  <BrowserRouter>
+    <App authEnabled={Boolean(clerkPublishableKey)} />
+  </BrowserRouter>
+)
 
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  clerkPublishableKey ? (
     <ClerkProvider publishableKey={clerkPublishableKey} afterSignOutUrl="/">
-      <App />
+      {app}
     </ClerkProvider>
-  </BrowserRouter>,
+  ) : app,
 )
