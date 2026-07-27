@@ -4,10 +4,24 @@ import { assets } from "../assets/assets";
 import { Menu, Search, X } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 
-const Navbar = () => {
-  const [isopen, setIsOpen] = useState(false);
+const AuthControls = () => {
   const { user } = useUser();
   const { openSignIn } = useClerk();
+
+  return !user ? (
+    <button
+      onClick={openSignIn}
+      className="cursor-pointer rounded-full bg-primary px-4 py-1 font-medium transition hover:bg-primary-dull sm:px-7 sm:py-2"
+    >
+      Login
+    </button>
+  ) : (
+    <UserButton />
+  );
+};
+
+const Navbar = ({ authEnabled = false }) => {
+  const [isopen, setIsOpen] = useState(false);
 
   return (
     <div className="fixed top-0 left-0 z-50 w-full flex items-center justify-between px-6 md:px-16 lg:px-36 py-5">
@@ -33,22 +47,14 @@ const Navbar = () => {
 
       <div className="flex items-center gap-8">
         <Search className="max-md:hidden w-6 h-6 cursor-pointer" />
-        {
-          !user ? (
-            <button 
-            onClick={openSignIn}
-          className="px-4 py-1 sm:px-7 sm:py-2 bg-primary
-          hover:bg-primary-dull transition rounded-full font-medium
-          cursor-pointer"
-        >
-          Login
-        </button>
-          ):(
-            <UserButton/>
-          )
-        }
-
-        
+        {authEnabled ? <AuthControls /> : (
+          <Link
+            to="/movies"
+            className="rounded-full bg-primary px-4 py-1 font-medium transition hover:bg-primary-dull sm:px-7 sm:py-2"
+          >
+            Explore
+          </Link>
+        )}
       </div>
 
       <Menu className="max-md:ml-4 md:hidden w-8 h-8 cursor-pointer" onClick={()=> setIsOpen(!isopen)} />

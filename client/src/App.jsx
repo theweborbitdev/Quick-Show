@@ -10,14 +10,14 @@ import Footer from './components/Footer'
 import {Toaster} from 'react-hot-toast'
 
 
-function App() {
+function App({ authEnabled = false }) {
   const pathname = useLocation().pathname
   const isAdminRoute = pathname.includes('/admin')
 
   return (
     <div>
       <Toaster position="top-right" />
-      {!isAdminRoute && <Navbar />}
+      {!isAdminRoute && <Navbar authEnabled={authEnabled} />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/movies" element={<Movies />} />
